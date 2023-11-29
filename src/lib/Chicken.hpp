@@ -1,11 +1,13 @@
+#ifndef CHICKEN_HPP
+#define CHICKEN_HPP
+
 typedef struct {
 	float x, y;	 //position of the chicken
 	float size;
 	bool  direction; //true for right
-} chicken;
+} Chicken;
 
 void drawChicken(const Chicken *chicken) {
-	glPushMatrix();
 	glTranslatef(chicken->x, chicken->y, 0.0f); //changes to the current position of the chicken
 	
 	//create square to represent the chicken
@@ -16,6 +18,6 @@ void drawChicken(const Chicken *chicken) {
 		glVertex2f(chicken->size, chicken->size);
 		glVertex2f(-chicken->size, chicken->size);
 	 glEnd();
-
-	 glPopMatrix();
 }
+
+#endif //CHICKEN_HPP

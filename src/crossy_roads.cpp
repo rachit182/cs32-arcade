@@ -2,48 +2,46 @@
 #include <GL/glut.h>
 #include "lib/Chicken.hpp"
 
+//Global Variables
+Chicken player;
+float laneHeight = 0.15f;
+
 void handleKeypress(unsigned char key, int x, int y) {
     switch (key) {
         case 'w': // Move up
-            player.y += 0.1f;
+            player.y += laneHeight;
             break;
         case 's': // Move down
-            player.y -= 0.1f;
+            player.y -= laneHeight;
             break;
         case 'a': // Move left
-            player.x -= 0.1f;
+            player.x -= laneHeight;
             break;
         case 'd': // Move right
-            player.x += 0.1f;
+            player.x += laneHeight;
             break;
     }
     glutPostRedisplay(); // Redraw the scene
+	glFlush();
 }
 
-void update(){
-	
-}
-
-void render(int value){
+void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
 	drawChicken(&player);
 
-	glFlush();
+	glFlush(); //single buffering
 }
-
-//Global variable
-Chicken player;
 
 void init(){
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	
 	{//initialise player
-		player.x 	 = 0.0f; // Initial X position
-    		player.y	 = 0.0f; // Initial Y position
-    		player.size	 = 0.1f; // Size of the chicken
-    		player.direction = true; // Initial Direction ~ right
+		player.x 	 =  0.0f; 		// Initial X position
+    		player.y	 = -1.0f; 		// Initial Y position
+    		player.size	 =  0.8*laneHeight;	// Size of the chicken
+    		player.direction =  true; 		// Initial Direction ~ right
 	}
 }
 
@@ -55,13 +53,11 @@ int main(int argc, char** argv){
 		glutInitWindowPosition(100,100);
 		glutCreateWindow("Crossy Roads");
 
-		glClearColor(1.0, 1.0, 1.0, 0.0);
+		init();
 	}
-
-	glutDisplayFunc(update);
+	
 	glutKeyboardFunc(handleKeypress);
-	glutTimerFunc(33, render, 0); 		//33ms ~ 30fps
-
+	glutDisplayFunc(display);
 	glutMainLoop();
 
 	return 0;
