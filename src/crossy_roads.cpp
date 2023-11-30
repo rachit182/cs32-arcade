@@ -25,7 +25,27 @@ void car(float x, float y){
 		glVertex2f(x+0.02f, y+0.18f);
 		glVertex2f(x-0.01f, y+0.16f);
 	glEnd();
-	//windows
+
+	glColor3f(0.286, 0.278, 0.361);
+	glBegin(GL_POLYGON); //winodw 
+		glVertex2f(x-0.003f, y+0.035f);
+		glVertex2f(x+0.015f, y+0.015f);
+		glVertex2f(x+0.015f, y+0.16f);
+		glVertex2f(x-0.003f, y+0.14f);
+
+	glEnd();
+	
+
+	glColor3f(0.286, 0.278, 0.361);
+	glBegin(GL_POLYGON); //winodw 
+		glVertex2f(x+0.135f, y+0.03f);
+		glVertex2f(x+0.115f, y+0.015f);
+		glVertex2f(x+0.115f, y+0.16f);
+		glVertex2f(x+0.135f, y+0.14f);
+
+	glEnd();
+
+
 	glBegin(GL_POLYGON);
 		//define window points
 	glEnd();
@@ -34,7 +54,7 @@ void car(float x, float y){
 void update(int value){
 	car_spawn_x=car_spawn_x-0.05;
 	glutPostRedisplay();
-	glutTimerFunc(100, update, 0);
+	// glutTimerFunc(100, update, 0);
 }
 
 void render(){
