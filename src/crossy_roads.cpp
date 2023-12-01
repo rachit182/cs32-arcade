@@ -6,9 +6,9 @@
 //Global Variables
 Chicken player;
 float laneHeight = 0.2f;
-Road road_1(0.0f, 0.0f, laneHeight, false, laneHeight*0.8);
-Road road_2(0.0f, 0.2f, laneHeight, true, laneHeight*0.8);
-Road road_3(0.0f, -0.2f, laneHeight, true, laneHeight*0.8);
+Road road_1(0.0f, 0.1f, laneHeight, false, laneHeight*0.8);
+Road road_2(0.0f, 0.5f, laneHeight, true, laneHeight*0.8);
+Road road_3(0.0f, -0.3f, laneHeight, true, laneHeight*0.8);
 std::vector<Road> road_list;
 
 void handleKeypress(unsigned char key, int x, int y) {
@@ -96,14 +96,14 @@ void update(int value){
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-
-//B_Player
-	drawChicken(&player);
   
-//Merger_Branch
+//C_NPC
 	for(auto road: road_list){
 		drawRoad(&road);
 	}
+
+//B_Player
+	drawChicken(&player);
 
 	glFlush(); //single buffering
 }
