@@ -3,19 +3,21 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include <GL/gl.h>
 #include <GL/glut.h>
 
 //remove direction variable, it has no use yet.
 
 struct Car{
-	float x, y;	 //position of the chicken
-	bool  direction; //true for right
-	//float size = 0.17;
+	float x, y;	 //position of the car
+	bool  direction; //true for left to right
+	float size;
 
-	Car(float x_cord, float y_cord, bool dir) {
+	Car(float x_cord, float y_cord, bool dir, float s) {
 		direction = dir;
-		y = y_cord - 0.09f;
+		y = y_cord;
+		size = s;
 		if(direction){
 			x = x_cord - 1.2f;
 		} else {
@@ -26,34 +28,62 @@ struct Car{
 
 void drawCar(const Car* car) {
 	glLoadIdentity();
-        
 	glTranslatef(car->x, car->y, 0.0f); //changes to the current position of the car
 	glColor3f(0.667, 0.224, 0.224);; // pretty red
     //Body
 	glBegin(GL_POLYGON);
-		glVertex2f(-0.01f, 0.02f);
-		glVertex2f(0.02f, 0.0f);
-		glVertex2f(0.12f, 0.0f);
-		glVertex2f(0.14f, 0.02f);
-		glVertex2f(0.14f, 0.16f);
-		glVertex2f(0.12f, 0.18f);
-		glVertex2f(0.02f, 0.18f);
-		glVertex2f(-0.01f, 0.16f);
+		glVertex2f(-0.6*car->size/2.0, 0.5*car->size);
+		glVertex2f(-1.0*car->size/2.0, 0.35*car->size);
+		glVertex2f(-1.0*car->size/2.0, -0.35*car->size);
+		glVertex2f(-0.6*car->size/2.0, -0.5*car->size);
+		glVertex2f(0.6*car->size/2.0, -0.5*car->size);
+		glVertex2f(1.0*car->size/2.0, -0.35*car->size);
+		glVertex2f(1.0*car->size/2.0, 0.35*car->size);
+		glVertex2f(0.6*car->size/2.0, 0.5*car->size);
 	glEnd();
 
-	glColor3f(0.635, 0.639, 0.643); 
-	//Window
+	glColor3f(0.635, 0.639, 0.643); //window grey
+	//Window Left Big
 	glBegin(GL_POLYGON);
-		glVertex2f(-0.003f, 0.035f);
-		glVertex2f(0.015f, 0.015f);
-		glVertex2f(0.015f, 0.16f);
-		glVertex2f(-0.003f, 0.14f);
+		glVertex2f(-0.6*car->size/2.0, 0.4*car->size);
+		glVertex2f(-0.45*car->size/2.0, 0.2*car->size);
+		glVertex2f(-0.45*car->size/2.0, -0.2*car->size);
+		glVertex2f(-0.6*car->size/2.0, -0.4*car->size);
 	glEnd();
+	//Window Bottom Left
 	glBegin(GL_POLYGON);
-		glVertex2f(0.135f, 0.03f);
-		glVertex2f(0.115f, 0.015f);
-		glVertex2f(0.115f, 0.16f);
-		glVertex2f(0.135f, 0.14f);
+		glVertex2f(-0.4*car->size/2.0, -0.275*car->size);
+		glVertex2f(-0.05*car->size/2.0, -0.275*car->size);
+		glVertex2f(-0.05*car->size/2.0, -0.4*car->size);
+		glVertex2f(-0.55*car->size/2.0, -0.4*car->size);
+	glEnd();
+	//Window Upper Left
+	glBegin(GL_POLYGON);
+		glVertex2f(-0.4*car->size/2.0, 0.275*car->size);
+		glVertex2f(-0.05*car->size/2.0, 0.275*car->size);
+		glVertex2f(-0.05*car->size/2.0, 0.4*car->size);
+		glVertex2f(-0.55*car->size/2.0, 0.4*car->size);
+	glEnd();
+	//Window Right Big
+	glBegin(GL_POLYGON);
+		glVertex2f(0.6*car->size/2.0, 0.4*car->size);
+		glVertex2f(0.45*car->size/2.0, 0.2*car->size);
+		glVertex2f(0.45*car->size/2.0, -0.2*car->size);
+		glVertex2f(0.6*car->size/2.0, -0.4*car->size);
+	glEnd();
+	//Window Bottom Right
+	glBegin(GL_POLYGON);
+		glVertex2f(0.4*car->size/2.0, -0.275*car->size);
+		glVertex2f(0.05*car->size/2.0, -0.275*car->size);
+		glVertex2f(0.05*car->size/2.0, -0.4*car->size);
+		glVertex2f(0.55*car->size/2.0, -0.4*car->size);
+	glEnd();
+	//Window Upper Right
+	glBegin(GL_POLYGON);
+		glVertex2f(0.4*car->size/2.0, 0.275*car->size);
+		glVertex2f(0.05*car->size/2.0, 0.275*car->size);
+		glVertex2f(0.05*car->size/2.0, 0.4*car->size);
+		glVertex2f(0.55*car->size/2.0, 0.4*car->size);
 	glEnd();
 }
 

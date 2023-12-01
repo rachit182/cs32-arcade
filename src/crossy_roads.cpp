@@ -1,27 +1,28 @@
-#include "road.hpp"
+#include "lib/road.hpp"
 
-//Car car_1;
-//make this a vector
-//float car_spawn_point_x = 1.2f;
-//float car_spawn_point_y = 0.8f;
 //Global Variables
-Road road_1(0.0f, 0.0f, false);
 float laneHeight = 0.2f;
+Road road_1(0.0f, 0.0f, laneHeight, false, laneHeight*0.8);
+Road road_2(0.0f, 0.2f, laneHeight, true, laneHeight*0.8);
+Road road_3(0.0f, -0.2f, laneHeight, true, laneHeight*0.8);
+std::vector<Road> road_list;
 
 void update(int value){
-	if (road_1.direction) {
-		if (road_1.car.x < 1.5f) {
-			road_1.car.x += 0.01f;
+	for(size_t i=0; i<road_list.size(); i++){
+		if (road_list[i].direction) {
+			if (road_list[i].car.x < 1.5f) {
+				road_list[i].car.x += 0.01f;
+			} else {
+				road_list[i].car.x = road_list[i].x - 1.2f;
+				road_list[i].car.y = road_list[i].y;
+			}
 		} else {
-			road_1.car.x = road_1.x - 1.2f;
-			road_1.car.y = road_1.y - 0.09f;
-		}
-	} else {
-		if (road_1.car.x > -1.5f) {
-			road_1.car.x -= 0.01f;
-		} else {
-			road_1.car.x = road_1.x + 1.2f;
-			road_1.car.y = road_1.y - 0.09f;
+			if (road_list[i].car.x > -1.5f) {
+				road_list[i].car.x -= 0.01f;
+			} else {
+				road_list[i].car.x = road_list[i].x + 1.2f;
+				road_list[i].car.y = road_list[i].y;
+			}
 		}
 	}
     glutPostRedisplay();
@@ -32,20 +33,18 @@ void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
-	drawRoad(&road_1);
+	for(auto road: road_list){
+		drawRoad(&road);
+	}
 
 	glFlush(); //single buffering
 }
 
 void init(){
-	glClearColor(1.0, 1.0, 1.0, 0.0);
-	
-	{
-	//initialise road
-		road_1.x = 0.0f;
-		road_1.y = 0.0f;
-		road_1.size = laneHeight;
-	}
+	glClearColor(0.133, 0.545, 0.133, 0.0);
+	road_list.push_back(road_1);
+	road_list.push_back(road_2);
+	road_list.push_back(road_3);
 }
 
 int main(int argc, char** argv){
