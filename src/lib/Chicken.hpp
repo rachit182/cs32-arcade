@@ -15,7 +15,8 @@ void drawChicken(const Chicken* chicken) {
 
         float half_height = chicken->size/2;
         float half_width  = chicken->size/4;
-        
+	
+	glLoadIdentity(); //Set current coordinates to default        
 	glTranslatef(chicken->x, chicken->y, 0.0f); //changes to the current position of the chicken
 	
 	//Body
