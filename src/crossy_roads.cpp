@@ -1,68 +1,51 @@
-#include <iostream>
-#include <GL/gl.h>
-#include <GL/glut.h>
+#include "road.hpp"
 
-float car_spawn_x = 0;
-float car_spawn_y = 0;
+//Car car_1;
+//make this a vector
+//float car_spawn_point_x = 1.2f;
+//float car_spawn_point_y = 0.8f;
+//Global Variables
+Road road_1(0.0f, 0.0f, false);
+float laneHeight = 0.2f;
+
+void update(int value){
+	if (road_1.direction) {
+		if (road_1.car.x < 1.5f) {
+			road_1.car.x += 0.01f;
+		} else {
+			road_1.car.x = road_1.x - 1.2f;
+			road_1.car.y = road_1.y - 0.09f;
+		}
+	} else {
+		if (road_1.car.x > -1.5f) {
+			road_1.car.x -= 0.01f;
+		} else {
+			road_1.car.x = road_1.x + 1.2f;
+			road_1.car.y = road_1.y - 0.09f;
+		}
+	}
+    glutPostRedisplay();
+    glutTimerFunc(33, update, 0);
+}
+
+void display(){
+	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+
+	drawRoad(&road_1);
+
+	glFlush(); //single buffering
+}
 
 void init(){
 	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glLoadIdentity();
-}
-
-void car(float x, float y){	
-	//glColor3f(0.286, 0.278, 0.361);
-	//glColor3f(0.624, 0.435, 0.725);
-	glColor3f(0.667, 0.224, 0.224);
-	//border
-	glBegin(GL_POLYGON);
-		glVertex2f(x-0.01f, y+0.02f);
-		glVertex2f(x+0.02f, y+0.0f);
-		glVertex2f(x+0.12f, y+0.0f);
-		glVertex2f(x+0.14f, y+0.02f);
-		glVertex2f(x+0.14f, y+0.16f);
-		glVertex2f(x+0.12f, y+0.18f);
-		glVertex2f(x+0.02f, y+0.18f);
-		glVertex2f(x-0.01f, y+0.16f);
-	glEnd();
-
-	glColor3f(0.286, 0.278, 0.361);
-	glBegin(GL_POLYGON); //winodw 
-		glVertex2f(x-0.003f, y+0.035f);
-		glVertex2f(x+0.015f, y+0.015f);
-		glVertex2f(x+0.015f, y+0.16f);
-		glVertex2f(x-0.003f, y+0.14f);
-
-	glEnd();
 	
-
-	glColor3f(0.286, 0.278, 0.361);
-	glBegin(GL_POLYGON); //winodw 
-		glVertex2f(x+0.135f, y+0.03f);
-		glVertex2f(x+0.115f, y+0.015f);
-		glVertex2f(x+0.115f, y+0.16f);
-		glVertex2f(x+0.135f, y+0.14f);
-
-	glEnd();
-
-
-	glBegin(GL_POLYGON);
-		//define window points
-	glEnd();
-}
-
-void update(int value){
-	car_spawn_x=car_spawn_x-0.05;
-	glutPostRedisplay();
-	// glutTimerFunc(100, update, 0);
-}
-
-void render(){
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	car(car_spawn_x, car_spawn_y);
-
-	glFlush();
+	{
+	//initialise road
+		road_1.x = 0.0f;
+		road_1.y = 0.0f;
+		road_1.size = laneHeight;
+	}
 }
 
 int main(int argc, char** argv){
@@ -72,16 +55,13 @@ int main(int argc, char** argv){
 		glutInitWindowSize(1200,600);
 		glutInitWindowPosition(100,100);
 		glutCreateWindow("Crossy Roads");
+
 		init();
-		
 	}
-
-	glutDisplayFunc(render);
-
-	glutTimerFunc(33, update, 0); //33ms ~ 30fps
-
+	
+	glutDisplayFunc(display);
+	glutTimerFunc(33, update, 0);
 	glutMainLoop();
 
 	return 0;
 }
-
