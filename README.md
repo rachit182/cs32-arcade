@@ -29,3 +29,17 @@ This file is an essential component of the Crossy Roads game.
 
 - **Structure:** The `Chicken` struct includes properties for position (`x`, `y`) and size of the chicken. The position is updated in the main loop.
 - **Function:** The `drawChicken` function uses OpenGL commands to draw a chicken on the screen based on its position.
+
+#### car.hpp
+Car are the NPC in our game and `car.hpp` contains code to define the `car` structure and the `drawCar` function. 
+This file is also an essential component of the Crossy Roads game.
+
+- **Structure:** The `Car` struct includes properties for position (`x`, `y`), the direction the car is going, and size of the car. The position is updated in the main loop.
+- **Function:** The `drawCar` function uses OpenGL commands to draw a car on the screen based on its position (updated in main file).
+
+#### road.hpp
+Road is another object in our game on which the cars spawn and `road.hpp` contains code to define the `road` structure and the `drawRoad` function. 
+This file is also an essential component of the Crossy Roads game.
+
+- **Structure:** The `Road` struct includes properties for position (`x`, `y`), the direction the cars on this road should be going, size of the road, and the car object on the road.
+- **Function:** The `drawCar` function uses OpenGL commands to draw a road on the screen based on its position and then calls `drawCar` to draw the car over it.
