@@ -5,20 +5,24 @@
 #include <vector>
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <iostream>
+
 
 struct Car{
 	float x, y;	 //position of the car
 	bool  direction; //true for left to right
 	float size;
-
+	
 	Car(float x_cord, float y_cord, bool dir, float size) : direction(dir), x(x_cord), y(y_cord), size(size) {}
 
 	void update(float distance){
+		std::cout << "x before update: " << x << std::endl;
 		if(direction){
 			x += distance;
 		} else {
 			x -= distance;
 		}
+		std::cout << "x after update: " << x << std::endl;
 	}
 
 	void draw(){

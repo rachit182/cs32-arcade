@@ -6,27 +6,21 @@
 #include <cstdlib>
 #include <iostream>
 
+
+
 class Level{
     std::vector<Road> roads;
     float laneHeight;
 
 public:
     Level(int difficulty, float lh): laneHeight(lh){
+        std::srand(time(0));
 
-        std::vector<bool> road_pos;
-        int n_roads = (difficulty/2)+2;
-
-        for (int i = 0; i < 9; ++i){
-            if (n_roads > 0){
-                std::cout << std::rand() << std::endl;
-                if (std::rand()%3){
-                    road_pos.push_back(false);
-                } else {
-                    std::cout << "creates road \n";
-                    road_pos.push_back(true);
-                    n_roads--;
-                }
-            }
+        std::vector<bool> road_pos(8, false);
+        int n_roads = (difficulty/2)+3;
+        
+        for (int i = 0; i < n_roads; ++ i){
+            road_pos[std::rand()%8] = true;
         }
         
         float velocity = 0.5*difficulty;

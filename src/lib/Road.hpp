@@ -14,9 +14,11 @@ struct Road{
     std::vector<Car>    cars;
 
     Road(float y_cord, float size, bool dir, int no_of_cars, float vel) : y(y_cord), size(size), direction(dir), velocity(vel){
+        std::srand(time(0));
         for (int i = 0; i < no_of_cars; ++i){
             float initial_pos = (((std::rand()/RAND_MAX)*2)-1);
             cars.push_back(Car(initial_pos, y, direction, size));
+            std::cout << "called car constructor" << std::endl;
         }
     }
 

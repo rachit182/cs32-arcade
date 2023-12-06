@@ -2,7 +2,6 @@
 #include <GL/glut.h>
 #include <vector>
 #include <cstdlib>
-#include <chrono>
 #include <ctime>
 
 #include "lib/errors.hpp"
@@ -13,7 +12,7 @@
 
 struct Chicken player;
 float laneHeight = 0.2f;
-int   no_of_levels = 15;
+int   no_of_levels = 1;
 std::vector<Level> levels;
 
 int State = 0;
@@ -96,7 +95,6 @@ void handleSpecialKeypress(int key, int x, int y) {
 }
 
 void update(int){
-
     try {
         if (State >= 1 && State <=no_of_levels){
             levels[State-1].update();
@@ -142,8 +140,7 @@ void init(){
         levels.push_back(Level(i, laneHeight));
     }
 
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::srand(seed);
+    std::srand(time(0));
 
 }
 
