@@ -1,15 +1,30 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
-#include "lib/Chicken.hpp"
-#include "lib/road.hpp"
+#include <vector>
 
-//Global Variables
-Chicken player;
+#include "lib/errors.hpp"
+#include "lib/Chicken.hpp"
+#include "lib/Level.hpp"
+#include "lib/Road.hpp"
+#include "lib/Car.hpp"
+
+struct Chicken player;
 float laneHeight = 0.2f;
-Road road_1(0.0f, 0.1f, laneHeight, false, laneHeight*0.8);
-Road road_2(0.0f, 0.5f, laneHeight, true, laneHeight*0.8);
-Road road_3(0.0f, -0.3f, laneHeight, true, laneHeight*0.8);
-std::vector<Road> road_list;
+int   no_of_levels = 15;
+std::vector<Level> levels;
+
+int State = 0;
+/*
+State Machine Assignment:
+0                   : Start Screen
+1 to no_of_levels   : Level Screens
+no_of_levels + 1    : WIN Screen
+no_of_levels + 2    : LOST Screen
+*/
+
+void drawStartScreen(){}
+void drawWinScreen(){}
+void drawLoseScreen(){}
 
 void handleKeypress(unsigned char key, int x, int y) {
     float movementAmount = laneHeight;
@@ -35,6 +50,10 @@ void handleKeypress(unsigned char key, int x, int y) {
                 player.x += 0.05f;
             }
             player.direction = true;
+            break;
+        case ' ': 
+            State = 1;
+            player.resetpos();
             break;
     }
     glutPostRedisplay();
@@ -72,55 +91,50 @@ void handleSpecialKeypress(int key, int x, int y) {
 }
 
 void update(int value){
-	for(size_t i=0; i<road_list.size(); i++){
-		if (road_list[i].direction) {
-			if (road_list[i].car.x < 1.5f) {
-				road_list[i].car.x += 0.01f;
-			} else {
-				road_list[i].car.x = road_list[i].x - 1.2f;
-				road_list[i].car.y = road_list[i].y;
-			}
-		} else {
-			if (road_list[i].car.x > -1.5f) {
-				road_list[i].car.x -= 0.01f;
-			} else {
-				road_list[i].car.x = road_list[i].x + 1.2f;
-				road_list[i].car.y = road_list[i].y;
-			}
-		}
-	}
+
+    try {
+        if (State >= 1 && State <=no_of_levels){
+            levels[State-1].update();
+        }
+    } catch (const LevelOver){
+        State++;
+    } catch (const Collision){
+        State = no_of_levels+2;
+    }
+
     glutPostRedisplay();
-    glutTimerFunc(33, update, 0);
 }
 
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-  
-//C_NPC
-	for(auto road: road_list){
-		drawRoad(&road);
-	}
+    
+    if (State == 0){
+        drawStartScreen();
+    } else if (State >= 1 && State <=no_of_levels){
+        levels[State-1].draw();
+	    drawChicken(&player);
+    } else if (State == no_of_levels+1){
+        drawWinScreen();
+    } else if (State == no_of_levels+2){
+        drawLoseScreen();
+    }
 
-//B_Player
-	drawChicken(&player);
-
-	glFlush(); //single buffering
+	glFlush();
 }
 
 void init(){
 	glClearColor(0.133, 0.545, 0.133, 0.0);
   
 	{//initialise player
-		player.x 	 =  0.0f; 		// Initial X position
-    		player.y	 = -1.0f + 0.5*laneHeight; 		// Initial Y position
-    		player.size	 =  0.8*laneHeight;	// Size of the chicken
-    		player.direction =  true; 		// Initial Direction ~ right
+		player.resetpos();
+        player.size	     =  0.8*laneHeight;	            // Size of the chicken
+        player.direction =  true; 		                // Initial Direction ~ right
 	}
-  
-	road_list.push_back(road_1);
-	road_list.push_back(road_2);
-	road_list.push_back(road_3);
+    
+    for (int i = 1; i <= no_of_levels; i++){
+        levels.push_back(Level(i, laneHeight));
+    }
 }
 
 int main(int argc, char** argv){
@@ -136,6 +150,7 @@ int main(int argc, char** argv){
 	
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleSpecialKeypress);
+
 	glutDisplayFunc(display);
 	glutTimerFunc(33, update, 0);
 	glutMainLoop();
