@@ -1,7 +1,7 @@
 # Variables
 CC = g++ -std=c++17
 EXECUTABLE = crossy_roads
-SOURCES = src/crossy_roads.cpp
+SOURCES = src/crossy_roads.cpp src/lib/*.hpp
 LIBS = -lGL -lGLU -lglut
 
 # Build rule

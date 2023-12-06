@@ -3,8 +3,8 @@
 
 #include "Car.hpp" 
 #include <cstdlib>
-#include <ctime>
 #include <vector>
+#include <iostream>
 
 struct Road{
 	float               y;
@@ -15,9 +15,6 @@ struct Road{
 
     Road(float y_cord, float size, bool dir, int no_of_cars, float vel) : y(y_cord), size(size), direction(dir), velocity(vel){
         for (int i = 0; i < no_of_cars; ++i){
-            //seeding current time
-            std::srand(static_cast<unsigned>(std::time(nullptr)));
-
             float initial_pos = (((std::rand()/RAND_MAX)*2)-1);
             cars.push_back(Car(initial_pos, y, direction, size));
         }

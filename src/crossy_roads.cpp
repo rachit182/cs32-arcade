@@ -1,6 +1,9 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <vector>
+#include <cstdlib>
+#include <chrono>
+#include <ctime>
 
 #include "lib/errors.hpp"
 #include "lib/Chicken.hpp"
@@ -52,8 +55,10 @@ void handleKeypress(unsigned char key, int x, int y) {
             player.direction = true;
             break;
         case ' ': 
-            State = 1;
-            player.resetpos();
+            if (State == 0 || State > no_of_levels){
+                State = 1;
+                player.resetpos();
+            }
             break;
     }
     glutPostRedisplay();
@@ -90,7 +95,7 @@ void handleSpecialKeypress(int key, int x, int y) {
     glFlush();
 }
 
-void update(int value){
+void update(int){
 
     try {
         if (State >= 1 && State <=no_of_levels){
@@ -103,6 +108,7 @@ void update(int value){
     }
 
     glutPostRedisplay();
+    glutTimerFunc(33, update, 0);
 }
 
 void display(){
@@ -122,7 +128,7 @@ void display(){
 
 	glFlush();
 }
-
+ 
 void init(){
 	glClearColor(0.133, 0.545, 0.133, 0.0);
   
@@ -135,6 +141,10 @@ void init(){
     for (int i = 1; i <= no_of_levels; i++){
         levels.push_back(Level(i, laneHeight));
     }
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::srand(seed);
+
 }
 
 int main(int argc, char** argv){

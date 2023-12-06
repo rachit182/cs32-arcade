@@ -1,6 +1,8 @@
 #ifndef CHICKEN_HPP
 #define CHICKEN_HPP
 
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include <cmath>
 
 //remove direction variable, it has no use yet.
