@@ -9,15 +9,11 @@
 #include "lib/Level.hpp"
 #include "lib/Road.hpp"
 #include "lib/Car.hpp"
-#include "lib/Text.hpp"
 
 struct Chicken player;
 float laneHeight = 0.2f;
 int   no_of_levels = 1;
 std::vector<Level> levels;
-
-const int window_width = 1200;
-const int window_height = 600;
 
 int State = 0;
 /*
@@ -28,12 +24,7 @@ no_of_levels + 1    : WIN Screen
 no_of_levels + 2    : LOST Screen
 */
 
-void drawStartScreen() {
-    //glRectf(-1.0f, 1.0f, 1.0f, -1.0f);
-    displayText();
-
-    glEnd();
-}
+void drawStartScreen(){}
 void drawWinScreen(){}
 void drawLoseScreen(){}
 
@@ -157,7 +148,7 @@ int main(int argc, char** argv){
 	{//initialise
 		glutInit(&argc, argv);
 		glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB);
-		glutInitWindowSize(window_width, window_height);
+		glutInitWindowSize(1200,600);
 		glutInitWindowPosition(100,100);
 		glutCreateWindow("Crossy Roads");
 
