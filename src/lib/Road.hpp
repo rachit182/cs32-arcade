@@ -6,7 +6,8 @@
 #include <vector>
 #include <iostream>
 
-struct Road{
+class Road{
+public:
 	float               y;
 	float               size;
     bool                direction;
@@ -18,13 +19,12 @@ struct Road{
         for (int i = 0; i < no_of_cars; ++i){
             float initial_pos = (((std::rand()/RAND_MAX)*2)-1);
             cars.push_back(Car(initial_pos, y, direction, size));
-            std::cout << "called car constructor" << std::endl;
         }
     }
 
     void update(){
-        for(auto i: cars){ //updating position of all cars
-            i.update(velocity);
+        for(size_t i=0; i < cars.size(); i++){ //updating position of all cars
+            cars[i].update(velocity);
         }
     }
 

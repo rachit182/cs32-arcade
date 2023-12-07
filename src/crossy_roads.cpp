@@ -104,7 +104,6 @@ void update(int){
     } catch (const Collision){
         State = no_of_levels+2;
     }
-
     glutPostRedisplay();
     glutTimerFunc(33, update, 0);
 }

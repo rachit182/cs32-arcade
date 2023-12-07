@@ -8,7 +8,8 @@
 #include <iostream>
 
 
-struct Car{
+class Car{
+public:
 	float x, y;	 //position of the car
 	bool  direction; //true for left to right
 	float size;
@@ -16,13 +17,12 @@ struct Car{
 	Car(float x_cord, float y_cord, bool dir, float size) : direction(dir), x(x_cord), y(y_cord), size(size) {}
 
 	void update(float distance){
-		std::cout << "x before update: " << x << std::endl;
 		if(direction){
 			x += distance;
 		} else {
 			x -= distance;
 		}
-		std::cout << "x after update: " << x << std::endl;
+		x=std::fmod(x+1,2)-1;
 	}
 
 	void draw(){
@@ -87,4 +87,4 @@ struct Car{
 	}
 };
 
-#endif //CHICKEN_HPP
+#endif //CAR_HPP

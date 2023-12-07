@@ -27,8 +27,9 @@ public:
         float current_height = -0.7f;
         for (auto i : road_pos){
             if (i){
-                bool dir = std::rand()%2;
-                roads.push_back(Road(current_height, laneHeight*0.8, dir, std::rand()%5, velocity));
+                bool dir            = std::rand()%2;
+                int number_of_cars  = std::rand()%4;
+                roads.push_back(Road(current_height, laneHeight*0.8, dir, 1, velocity));
             }
             current_height += 0.2f;
 
