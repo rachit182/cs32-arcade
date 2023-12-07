@@ -9,6 +9,7 @@
 #include "lib/Level.hpp"
 #include "lib/Road.hpp"
 #include "lib/Car.hpp"
+#include "lib/Image.cpp"
 
 struct Chicken player;
 float laneHeight = 0.2f;
@@ -24,7 +25,24 @@ no_of_levels + 1    : WIN Screen
 no_of_levels + 2    : LOST Screen
 */
 
-void drawStartScreen(){}
+void drawStartScreen() {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    //textures[0] = loadTexture("imgs/snail.bmp");
+    textures[0] = loadTexture("imgs/crlogo.bmp");
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+        glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+        glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+        glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
 void drawWinScreen(){}
 void drawLoseScreen(){}
 
