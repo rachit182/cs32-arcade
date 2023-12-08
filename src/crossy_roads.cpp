@@ -25,26 +25,69 @@ no_of_levels + 1    : WIN Screen
 no_of_levels + 2    : LOST Screen
 */
 
+void loadTextures() {
+    textures[0] = loadTexture("imgs/title.bmp");
+    textures[1] = loadTexture("imgs/win.bmp");
+    textures[2] = loadTexture("imgs/lose0.bmp");
+    textures[3] = loadTexture("imgs/lose1.bmp");
+    textures[4] = loadTexture("imgs/lose2.bmp");
+    textures[5] = loadTexture("imgs/lose3.bmp");
+    textures[6] = loadTexture("imgs/lose4.bmp");
+    textures[7] = loadTexture("imgs/lose5.bmp");
+    textures[8] = loadTexture("imgs/lose6.bmp");
+}
+
 void drawStartScreen() {
+    currentTexture = 0;
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    //textures[0] = loadTexture("imgs/snail.bmp");
-    textures[0] = loadTexture("imgs/crlogo.bmp");
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
 
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
-        glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
-        glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
-        glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
 
     glFlush();
 }
-void drawWinScreen(){}
-void drawLoseScreen(){}
+void drawWinScreen() {
+    currentTexture = 1;
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
+void drawLoseScreen(int levels_completed) {
+    currentTexture = levels_completed + 2; // 0 is title, 1 is win, 2-8 are lose screens
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
 
 void handleKeypress(unsigned char key, int x, int y) {
     float movementAmount = laneHeight;
@@ -139,13 +182,14 @@ void display(){
     } else if (State == no_of_levels+1){
         drawWinScreen();
     } else if (State == no_of_levels+2){
-        drawLoseScreen();
+        drawLoseScreen(0); // 0 is a placeholder and should be changed to the number of levels COMPLETED (current level - 1)
     }
 
 	glFlush();
 }
  
 void init(){
+    loadTextures();
 	glClearColor(0.133, 0.545, 0.133, 0.0);
   
 	{//initialise player

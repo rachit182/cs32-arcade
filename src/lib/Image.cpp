@@ -70,12 +70,5 @@ GLuint loadTexture(const char *filename) {
     return textureID;
 }
 
-GLuint textures[2]; // Array to hold texture IDs
-int currentTexture = 0; // Index to keep track of the current texture
-
-void timer(int value) {
-    currentTexture = (currentTexture + 1) % 2; // Change texture
-    glutPostRedisplay();
-    glutTimerFunc(1000, timer, 0); // Call this function again after 1 second
-}
-
+GLuint textures[9]; // Array to hold texture IDs
+int currentTexture; // Index to keep track of the current texture
