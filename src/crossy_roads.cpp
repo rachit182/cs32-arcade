@@ -1,17 +1,93 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
 #include "lib/Chicken.hpp"
-#include "lib/road.hpp"
+#include "lib/Level.hpp"
+#include "lib/Road.hpp"
+#include "lib/Car.hpp"
+#include "lib/Image.hpp"
 
-//Global Variables
-Chicken player;
+struct Chicken player;
 float laneHeight = 0.2f;
-Road road_1(0.0f, 0.1f, laneHeight, false, laneHeight*0.8);
-Road road_2(0.0f, 0.5f, laneHeight, true, laneHeight*0.8);
-Road road_3(0.0f, -0.3f, laneHeight, true, laneHeight*0.8);
-std::vector<Road> road_list;
+int   no_of_levels = 7;
+std::vector<Level> levels;
+int losing_level=0;
+int State = 0;
+/*
+State Machine Assignment:
+0                   : Start Screen
+1 to no_of_levels   : Level Screens
+no_of_levels + 1    : WIN Screen
+no_of_levels + 2    : LOST Screen
+*/
 
-void handleKeypress(unsigned char key, int x, int y) {
+
+void loadTextures() {
+    textures[0] = loadTexture("./src/imgs/title.bmp");
+    textures[1] = loadTexture("./src/imgs/win.bmp");
+    textures[2] = loadTexture("./src/imgs/lose0.bmp");
+    textures[3] = loadTexture("./src/imgs/lose1.bmp");
+    textures[4] = loadTexture("./src/imgs/lose2.bmp");
+    textures[5] = loadTexture("./src/imgs/lose3.bmp");
+    textures[6] = loadTexture("./src/imgs/lose4.bmp");
+    textures[7] = loadTexture("./src/imgs/lose5.bmp");
+    textures[8] = loadTexture("./src/imgs/lose6.bmp");
+}
+
+void drawStartScreen() {
+    currentTexture = 0;
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
+void drawWinScreen() {
+    currentTexture = 1;
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
+void drawLoseScreen(int levels_completed) {
+    currentTexture = levels_completed + 2; // 0 is title, 1 is win, 2-8 are lose screens
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+    glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+    glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glFlush();
+}
+
+void handleKeypress(unsigned char key, int, int) {
     float movementAmount = laneHeight;
     switch (key) {
         case 'w': // Move up
@@ -36,12 +112,18 @@ void handleKeypress(unsigned char key, int x, int y) {
             }
             player.direction = true;
             break;
+        case ' ': 
+            if (State == 0 || State > no_of_levels){
+                State = 1;
+                player.resetpos();
+            }
+            break;
     }
     glutPostRedisplay();
     glFlush();
 }
 
-void handleSpecialKeypress(int key, int x, int y) {
+void handleSpecialKeypress(int key, int, int) {
     float movementAmount = laneHeight;
     switch (key) {
         case GLUT_KEY_UP:
@@ -71,24 +153,15 @@ void handleSpecialKeypress(int key, int x, int y) {
     glFlush();
 }
 
-void update(int value){
-	for(size_t i=0; i<road_list.size(); i++){
-		if (road_list[i].direction) {
-			if (road_list[i].car.x < 1.5f) {
-				road_list[i].car.x += 0.01f;
-			} else {
-				road_list[i].car.x = road_list[i].x - 1.2f;
-				road_list[i].car.y = road_list[i].y;
-			}
-		} else {
-			if (road_list[i].car.x > -1.5f) {
-				road_list[i].car.x -= 0.01f;
-			} else {
-				road_list[i].car.x = road_list[i].x + 1.2f;
-				road_list[i].car.y = road_list[i].y;
-			}
-		}
-	}
+void update(int){
+        if (State >= 1 && State <=no_of_levels){
+            levels[State-1].update();
+        }
+
+        if (player.y > (1.0-laneHeight)){ //level completed
+            player.resetpos();
+            State++;
+        }
     glutPostRedisplay();
     glutTimerFunc(33, update, 0);
 }
@@ -96,31 +169,38 @@ void update(int value){
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-  
-//C_NPC
-	for(auto road: road_list){
-		drawRoad(&road);
-	}
+    
+    if (State == 0){
+        drawStartScreen();
+    } else if (State >= 1 && State <= no_of_levels){
+        levels[State-1].draw();
+	    drawChicken(&player);
+    } else if (State == no_of_levels+1){
+        drawWinScreen();
+    } else if (State == no_of_levels+2){
+        player.resetpos();
+        drawLoseScreen(losing_level);
+    }
 
-//B_Player
-	drawChicken(&player);
-
-	glFlush(); //single buffering
+	glFlush();
 }
-
+ 
 void init(){
+    loadTextures();
 	glClearColor(0.133, 0.545, 0.133, 0.0);
   
 	{//initialise player
-		player.x 	 =  0.0f; 		// Initial X position
-    		player.y	 = -1.0f + 0.5*laneHeight; 		// Initial Y position
-    		player.size	 =  0.8*laneHeight;	// Size of the chicken
-    		player.direction =  true; 		// Initial Direction ~ right
+		player.resetpos();
+        player.size	     =  0.8*laneHeight;	            // Size of the chicken
+        player.direction =  true; 		                // Initial Direction ~ right
 	}
-  
-	road_list.push_back(road_1);
-	road_list.push_back(road_2);
-	road_list.push_back(road_3);
+    
+    for (int i = 1; i <= no_of_levels; i++){
+        levels.push_back(Level(i, laneHeight));
+    }
+
+    std::srand(time(0));
+
 }
 
 int main(int argc, char** argv){
@@ -136,6 +216,7 @@ int main(int argc, char** argv){
 	
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleSpecialKeypress);
+
 	glutDisplayFunc(display);
 	glutTimerFunc(33, update, 0);
 	glutMainLoop();
