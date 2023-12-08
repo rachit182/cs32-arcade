@@ -39,7 +39,6 @@ void loadTextures() {
 
 void drawStartScreen() {
     currentTexture = 0;
-    glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
 
@@ -56,7 +55,6 @@ void drawStartScreen() {
 }
 void drawWinScreen() {
     currentTexture = 1;
-    glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
 
@@ -73,7 +71,7 @@ void drawWinScreen() {
 }
 void drawLoseScreen(int levels_completed) {
     currentTexture = levels_completed + 2; // 0 is title, 1 is win, 2-8 are lose screens
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.133, 0.545, 0.133, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
 
@@ -89,7 +87,7 @@ void drawLoseScreen(int levels_completed) {
     glFlush();
 }
 
-void handleKeypress(unsigned char key, int x, int y) {
+void handleKeypress(unsigned char key, int, int) {
     float movementAmount = laneHeight;
     switch (key) {
         case 'w': // Move up
@@ -125,7 +123,7 @@ void handleKeypress(unsigned char key, int x, int y) {
     glFlush();
 }
 
-void handleSpecialKeypress(int key, int x, int y) {
+void handleSpecialKeypress(int key, int, int) {
     float movementAmount = laneHeight;
     switch (key) {
         case GLUT_KEY_UP:
