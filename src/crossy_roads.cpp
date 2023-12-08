@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "lib/errors.hpp"
 #include "lib/Chicken.hpp"
 #include "lib/Level.hpp"
 #include "lib/Road.hpp"
@@ -104,7 +103,6 @@ void handleSpecialKeypress(int key, int x, int y) {
 }
 
 void update(int){
-    try {
         if (State >= 1 && State <=no_of_levels){
             levels[State-1].update();
         }
@@ -113,12 +111,6 @@ void update(int){
             player.resetpos();
             State++;
         }
-
-    } catch (const LevelOver){
-        State++;
-    } catch (const Collision){
-        State = no_of_levels+2;
-    }
     glutPostRedisplay();
     glutTimerFunc(33, update, 0);
 }
