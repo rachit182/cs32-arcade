@@ -16,15 +16,28 @@ public:
 
     Road(float y_cord, float size, bool dir, int no_of_cars, float vel) : y(y_cord), size(size), direction(dir), velocity(vel){
         std::srand(time(0));
+        std::vector<bool> spawn_pts(8,false);
         for (int i = 0; i < no_of_cars; ++i){
-            float initial_pos = (((std::rand()/RAND_MAX)*2)-1);
-            cars.push_back(Car(initial_pos, y, direction, size));
+            int spawn = (std::rand()%8);
+            while (spawn_pts[spawn] == true){
+                spawn = (std::rand()%8);
+            }
+            spawn_pts[spawn] = true;
+        }
+
+        float initial_pos = -0.8f;
+        for (auto i: spawn_pts){
+            if (i){
+                cars.push_back(Car(initial_pos, y, direction, size));
+            } 
+            initial_pos += 0.3f;
         }
     }
 
     void update(){
+        float r_velocity = velocity*(0.8+((rand()%500)/1000.0));
         for(size_t i=0; i < cars.size(); i++){ //updating position of all cars
-            cars[i].update(velocity);
+            cars[i].update(r_velocity);
         }
     }
 

@@ -12,7 +12,7 @@
 
 struct Chicken player;
 float laneHeight = 0.2f;
-int   no_of_levels = 1;
+int   no_of_levels = 7;
 std::vector<Level> levels;
 
 int State = 0;
@@ -24,9 +24,18 @@ no_of_levels + 1    : WIN Screen
 no_of_levels + 2    : LOST Screen
 */
 
-void drawStartScreen(){}
-void drawWinScreen(){}
-void drawLoseScreen(){}
+void drawStartScreen(){
+    glColor3f(0,0,0);
+    glRectd(-1,-1,1,1);
+}
+void drawWinScreen(){
+    glColor3f(0,1,0);
+    glRectd(-1,-1,1,1);
+}
+void drawLoseScreen(){
+    glColor3f(1,0,0);
+    glRectd(-1,-1,1,1);
+}
 
 void handleKeypress(unsigned char key, int x, int y) {
     float movementAmount = laneHeight;
@@ -99,6 +108,12 @@ void update(int){
         if (State >= 1 && State <=no_of_levels){
             levels[State-1].update();
         }
+
+        if (player.y > (1.0-laneHeight)){ //level completed
+            player.resetpos();
+            State++;
+        }
+
     } catch (const LevelOver){
         State++;
     } catch (const Collision){
@@ -120,6 +135,7 @@ void display(){
     } else if (State == no_of_levels+1){
         drawWinScreen();
     } else if (State == no_of_levels+2){
+        player.resetpos();
         drawLoseScreen();
     }
 
