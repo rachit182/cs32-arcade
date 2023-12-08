@@ -11,6 +11,7 @@
 extern float laneHeight;
 extern int 	 no_of_levels;
 extern int 	 State;
+extern int 	losing_level;
 extern struct Chicken player;
 
 struct Color {
@@ -67,6 +68,7 @@ public:
 	void draw(){
 
 		if (fabs(x-(player.x))<(0.6*laneHeight) && fabs(y-(player.y))<(0.99*laneHeight)){
+			losing_level=State-1;
 			State = no_of_levels+2;
 		}
 
