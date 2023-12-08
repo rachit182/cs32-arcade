@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "lib/errors.hpp"
 #include "lib/Chicken.hpp"
 #include "lib/Level.hpp"
 #include "lib/Road.hpp"
@@ -13,7 +12,7 @@
 
 struct Chicken player;
 float laneHeight = 0.2f;
-int   no_of_levels = 1;
+int   no_of_levels = 7;
 std::vector<Level> levels;
 
 int State = 0;
@@ -24,6 +23,7 @@ State Machine Assignment:
 no_of_levels + 1    : WIN Screen
 no_of_levels + 2    : LOST Screen
 */
+
 
 void loadTextures() {
     textures[0] = loadTexture("imgs/title.bmp");
@@ -156,16 +156,14 @@ void handleSpecialKeypress(int key, int x, int y) {
 }
 
 void update(int){
-    try {
         if (State >= 1 && State <=no_of_levels){
             levels[State-1].update();
         }
-    } catch (const LevelOver){
-        State++;
-    } catch (const Collision){
-        State = no_of_levels+2;
-    }
 
+        if (player.y > (1.0-laneHeight)){ //level completed
+            player.resetpos();
+            State++;
+        }
     glutPostRedisplay();
     glutTimerFunc(33, update, 0);
 }
@@ -182,6 +180,7 @@ void display(){
     } else if (State == no_of_levels+1){
         drawWinScreen();
     } else if (State == no_of_levels+2){
+        player.resetpos();
         drawLoseScreen(0); // 0 is a placeholder and should be changed to the number of levels COMPLETED (current level - 1)
     }
 
